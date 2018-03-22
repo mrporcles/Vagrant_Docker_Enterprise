@@ -6,28 +6,28 @@
 # Box configuration
 boxes = [
     {
-        :name => "admiral",
-        :eth1 => "192.168.33.101",
-        :mem => "2048",
-        :cpu => "1"
-    },
-    {
-        :name => "harbor",
-        :eth1 => "192.168.33.102",
-        :mem => "1024",
-        :cpu => "1"
-    },
-    {
 
         :name => "worker-1",
         :eth1 => "192.168.33.103",
-        :mem => "512",
+        :mem => "1024",
         :cpu => "1"
     },
     {
         :name => "worker-2",
         :eth1 => "192.168.33.104",
-        :mem => "512",
+        :mem => "1024",
+        :cpu => "1"
+    },
+    {
+        :name => "harbor",
+        :eth1 => "192.168.33.102",
+        :mem => "4096",
+        :cpu => "2"
+    },
+    {
+        :name => "admiral",
+        :eth1 => "192.168.33.101",
+        :mem => "2048",
         :cpu => "1"
     }
 ]
@@ -63,20 +63,20 @@ Vagrant.configure(2) do |config|
       # Networking
       config.vm.network "private_network", ip: opts[:eth1]
 
-      # Port forwardings (usually not needed due to second host-only interfaces which can be accessed from the vagrant host) 
+      # Port forwardings (usually not needed due to second host-only interfaces which can be accessed from the vagrant host)
       #config.vm.network "forwarded_port", guest: 8282, host: 8282 if opts[:name] == "admiral"
       #config.vm.network "forwarded_port", guest: 80, host: 8080 if opts[:name] == "harbor"
 
       #### Provisioning Scripts ####
       # Update packages - uncomment to upgrade PhotonOS to the latest release during provisioning
-      # config.vm.provision "shell", path: "scripts/provision/updates.sh"
-      
+      #config.vm.provision "shell", path: "scripts/provision/updates.sh"
+
       # Fix a bug in networkd-wait
       config.vm.provision "shell", path: "scripts/provision/fix_networkd-wait.sh"
 
       # Configure docker
       config.vm.provision "shell", path: "scripts/provision/docker.sh"
-      
+
       # Configure /etc/hosts
       boxes.each do |opts|
         config.vm.provision "shell" do |arg|
