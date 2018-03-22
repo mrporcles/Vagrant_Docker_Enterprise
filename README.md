@@ -5,16 +5,16 @@
   * See @vmtocloud ´s blog articles [e.g. here](http://www.vmtocloud.com/how-to-use-vmware-admiral-container-service-with-harbor-registry/) or the user guides on [Harbor](https://github.com/vmware/harbor/blob/master/docs/user_guide.md) and [Admiral](https://github.com/vmware/admiral#getting-started) for some better understanding of the products
 
 **2. Notes, Pre-Reqs and tested environment**
-  * Tested on OSX 10.11.6, Vagrant 1.8.1 (see [issue w/ Vagrant > 1.8.1 #7808](https://github.com/mitchellh/vagrant/issues/7808), Virtualbox 5.0.26
-    * Tested VMware Photon OS Image v1.2.0 (run "vagrant box update --box vmware/photon" to update to the latest Vagrant Box)
+  * Tested on OSX 10.12.6, Vagrant 2.0.3, Virtualbox 5.2.8
+    * Tested VMware Photon OS Image v2.0 (run "vagrant box update --box vmware/photon" to update to the latest Vagrant Box)
   * Please see [Issues](https://github.com/embano1/Vagrant_Docker_Enterprise/issues) section for planned improvements and current issues
-  * The Admiral node requires 1 vCPU and 2GB MEM, Harbor 1 vCPU and 1GB MEM, workers are configured for 1 vCPU and 512MB MEM
+  * The Admiral node requires 1 vCPU and 2GB MEM, Harbor 2 vCPU and 4GB MEM, workers are configured for 1 vCPU and 1GB MEM
   * It is also possible to just launch some of the boxes ("vagrant up admiral worker-1"), e.g. in case of resource constraints
   * **Depending on your connection, pulling images can take a while so be patient :)** (you can open a parallel vagrant ssh session and verify that docker pull is still running, e.g. ps auxf)
   * This is a test/ demo environment only, so don´t use in production (especially not because the appliances are not really hardened and most of the communication between the nodes is plain http)
   
 **3. How to start**
-  * git clone https://github.com/embano1/Vagrant_Docker_Enterprise
+  * git clone https://github.com/mrporcles/Vagrant_Docker_Enterprise
   * cd Vagrant_Docker_Enterprise
   * vagrant up (note: this will launch all four machines by default; one can also select machines, e.g. "vagrant up admiral harbor worker-1")
   * More: see the [Wiki](https://github.com/embano1/Vagrant_Docker_Enterprise/wiki)
