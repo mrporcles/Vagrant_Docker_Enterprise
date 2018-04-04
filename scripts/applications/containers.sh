@@ -4,8 +4,8 @@ set -e
 
 # User defined variables
 admiral_version="v1.3.0"
-harbor_version="1.3.0"
-docker_compose_version="1.19.0"
+harbor_version="1.4.0"
+docker_compose_version="1.20.1"
 
 # Check for first argument (must be node name to map containers)
 function check_first_arg {
@@ -75,7 +75,7 @@ function install_harbor {
 	then
 		echo "Cleaning up and fetching VMware Harbor Release (version ${harbor_version})"
 		sudo rm -rf /opt/harbor*
-		sudo curl -o /opt/harbor.tar.gz -Ls https://storage.googleapis.com/harbor-releases/harbor-online-installer-v${harbor_version}.tgz
+		sudo curl -o /opt/harbor.tar.gz -Ls https://storage.googleapis.com/harbor-releases/release-${harbor_version}/harbor-online-installer-v${harbor_version}.tgz
 		if [ $? -ne 0 ]; then
 			echo "Error retrieving file from the web"
 			exit 1
