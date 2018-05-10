@@ -3,8 +3,8 @@
 set -e
 
 # User defined variables
-admiral_version="v1.3.0"
-harbor_version="1.4.0"
+admiral_version="v1.4.0"
+harbor_version="1.5.0"
 docker_compose_version="1.20.1"
 
 # Check for first argument (must be node name to map containers)
@@ -61,7 +61,7 @@ function install_admiral {
 			exit 1
 		fi
 		echo "Adding Harbor Registry to VMware Admiral"
-		sudo curl -s -X POST http://192.168.33.101:8282/core/auth/credentials -H "x-project: /projects/default-project" -H "Content-Type: application/json" -d '{"type":"Password","userEmail":"admin","privateKey":"Harbor12345","customProperties":{"__authCredentialsName":"harbor-admin"}}' && credential=$(sudo curl -s -X GET http://192.168.33.101:8282/core/auth/credentials |jq '.documentLinks | .[]' |grep -v cert) && payload="{\"hostState\":{\"address\":\"http://harbor.local:80\",\"name\":\"Harbor\",\"endpointType\":\"container.docker.registry\",\"authCredentialsLink\":$credential}}" && sudo curl -s -X PUT http://192.168.33.101:8282/config/registry-spec -H "x-project: /projects/default-project" -H "Content-Type: application/json" -d $payload
+		sudo curl -s -X POST http://192.168.33.101:8282/core/auth/credentials -H "x-project: /projects/default-project" -H "Content-Type: application/json" -d '{"type":"Password","userEmail":"admin","privateKey":"Harbor12345","customProperties":{"__authCredentialsName":"harbor-admin"}}' && credential=$(sudo curl -s -X GET http://192.168.33.101:8282/core/auth/credentials |jq '.documentLinks | .[]' |grep -v cert) && payload="{\"hostState\":{\"address\":\"http://harbor.local:80\",\"name\":\"Harbor\",\"endpointType\":\"container.docker.registry\",\"authCredentialsLink\":$credential}}" && sudo curl -s -X PUT http://192.168.33.101:8282/config/registry-spec -H "Content-Type: application/json" -d $payload
 		if [ $? -ne 0 ]; then
 			echo "Something went wrong adding Harbor Registry to VMware Admiral, exiting"
 			exit 1
