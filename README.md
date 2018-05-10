@@ -5,7 +5,7 @@
   * See @vmtocloud ´s blog articles [e.g. here](http://www.vmtocloud.com/how-to-use-vmware-admiral-container-service-with-harbor-registry/) or the user guides on [Harbor](https://github.com/vmware/harbor/blob/master/docs/user_guide.md) and [Admiral](https://github.com/vmware/admiral#getting-started) for some better understanding of the products
 
 **2. Notes, Pre-Reqs and tested environment**
-  * Tested on OSX 10.12.6, Vagrant 2.0.3, Virtualbox 5.2.8
+  * Tested on OSX 10.12.6, Vagrant 2.1.1, Virtualbox 5.2.10
     * Tested VMware Photon OS Image v2.0 (run "vagrant box update --box vmware/photon" to update to the latest Vagrant Box)
   * Please see [Issues](https://github.com/embano1/Vagrant_Docker_Enterprise/issues) section for planned improvements and current issues
   * The Admiral node requires 1 vCPU and 2GB MEM, Harbor 2 vCPU and 4GB MEM, workers are configured for 1 vCPU and 1GB MEM
