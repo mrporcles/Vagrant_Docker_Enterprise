@@ -4,7 +4,7 @@ set -e
 
 # User defined variables
 admiral_version="v1.4.0"
-harbor_version="1.5.1"
+harbor_version="1.5.2"
 docker_compose_version="1.20.1"
 
 # Check for first argument (must be node name to map containers)
