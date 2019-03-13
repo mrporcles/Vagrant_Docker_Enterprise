@@ -3,8 +3,8 @@
 set -e
 
 # User defined variables
-admiral_version="v1.4.0"
-harbor_version="1.5.2"
+admiral_version="v1.5.2"
+harbor_version="1.7.4"
 docker_compose_version="1.20.1"
 
 # Check for first argument (must be node name to map containers)
@@ -76,7 +76,7 @@ function install_harbor {
 		echo "Cleaning up and fetching VMware Harbor Release (version ${harbor_version})"
 		sudo rm -rf /opt/harbor*
 		# sudo curl -o /opt/harbor.tar.gz -Ls https://storage.googleapis.com/harbor-releases/release-${harbor_version}/harbor-online-installer-v${harbor_version}.tgz
-		sudo curl -o /opt/harbor.tar.gz -Ls https://storage.googleapis.com/harbor-releases/harbor-online-installer-v${harbor_version}.tgz
+		sudo curl -o /opt/harbor.tar.gz -Ls https://storage.googleapis.com/harbor-releases/release-1.7.0/harbor-online-installer-v${harbor_version}.tgz
 		if [ $? -ne 0 ]; then
 			echo "Error retrieving file from the web"
 			exit 1
@@ -108,7 +108,8 @@ function install_harbor {
 		echo "Unpacking and configuring VMware Harbor"
 		sudo mkdir /opt/harbor && sudo tar -xzf /opt/harbor.tar.gz -C /opt
                 sudo sed -i "s/reg\.mydomain\.com/${1}.local/" /opt/harbor/harbor.cfg
-                cd /opt/harbor; ./install.sh --with-clair;
+								cd /opt/harbor; sudo ./prepare --with-clair --with-chartmuseum; sudo chmod -R 755 common; sudo chmod -R 755 /data;
+								sudo docker-compose -f docker-compose.yml -f docker-compose.clair.yml -f docker-compose.chartmuseum.yml up -d
 
 		#echo "Calling docker-compose up"
     #            sudo /usr/local/bin/docker-compose -f /tmp/harbor/docker-compose.yml up -d
