@@ -3,9 +3,9 @@
 set -e
 
 # User defined variables
-admiral_version="v1.5.2"
-harbor_version="1.7.4"
-docker_compose_version="1.20.1"
+admiral_version="1.5.2"
+harbor_version="1.9.2"
+docker_compose_version="1.24.1"
 
 # Check for first argument (must be node name to map containers)
 function check_first_arg {
@@ -33,9 +33,9 @@ function install_admiral {
 			exit 1
 		fi
 		echo "Fetching VMware Admiral Container Image and starting container (ports 8282:8282)"
-		sudo docker pull vmware/admiral:${admiral_version}
+		sudo docker pull vmware/admiral:v${admiral_version}
 		# TODO Fix static IP
-		sudo docker run -d -p 8282:8282 --add-host="harbor.local:192.168.33.102" --name admiral -u root vmware/admiral:${admiral_version}
+		sudo docker run -d -p 8282:8282 --add-host="harbor.local:192.168.33.102" --name admiral -u root vmware/admiral:v${admiral_version}
 		if [ $? -ne 0 ]; then
 			echo "Something went wrong starting VMware Admiral, exiting"
 			exit 1
@@ -75,24 +75,16 @@ function install_harbor {
 	then
 		echo "Cleaning up and fetching VMware Harbor Release (version ${harbor_version})"
 		sudo rm -rf /opt/harbor*
-		# sudo curl -o /opt/harbor.tar.gz -Ls https://storage.googleapis.com/harbor-releases/release-${harbor_version}/harbor-online-installer-v${harbor_version}.tgz
-		sudo curl -o /opt/harbor.tar.gz -Ls https://storage.googleapis.com/harbor-releases/release-1.7.0/harbor-online-installer-v${harbor_version}.tgz
+		sudo curl -o /opt/harbor.tar.gz -Ls https://github.com/goharbor/harbor/releases/download/v${harbor_version}/harbor-online-installer-v${harbor_version}.tgz
 		if [ $? -ne 0 ]; then
 			echo "Error retrieving file from the web"
 			exit 1
 		fi
 
-		echo "We need python2, installing..."
-		sudo tdnf install python2 -y
+		echo "We need python2, tar and awk, installing..."
+		sudo tdnf install python2 tar gawk -y
 		if [ $? -ne 0 ]; then
 			echo "Could not install python2 (tdnf), exiting."
-			exit 1
-		fi
-
-		echo "We need tar, installing..."
-		sudo tdnf install tar -y
-		if [ $? -ne 0 ]; then
-			echo "Could not install tar utility (tdnf), exiting."
 			exit 1
 		fi
 
@@ -107,12 +99,12 @@ function install_harbor {
 
 		echo "Unpacking and configuring VMware Harbor"
 		sudo mkdir /opt/harbor && sudo tar -xzf /opt/harbor.tar.gz -C /opt
-                sudo sed -i "s/reg\.mydomain\.com/${1}.local/" /opt/harbor/harbor.cfg
+                sudo sed -i "s/reg\.mydomain\.com/${1}.local/" /opt/harbor/harbor.yml
 								cd /opt/harbor; sudo ./prepare --with-clair --with-chartmuseum; sudo chmod -R 755 common; sudo chmod -R 755 /data;
-								sudo docker-compose -f docker-compose.yml -f docker-compose.clair.yml -f docker-compose.chartmuseum.yml up -d
-
-		#echo "Calling docker-compose up"
-    #            sudo /usr/local/bin/docker-compose -f /tmp/harbor/docker-compose.yml up -d
+		#						sudo docker-compose -f docker-compose.yml -f docker-compose.clair.yml -f docker-compose.chartmuseum.yml up -d
+		echo "Calling docker-compose up"
+								sudo docker-compose up -d
+    #           sudo /usr/local/bin/docker-compose -f /tmp/harbor/docker-compose.yml up -d
 
 		if [ $? -eq 0 ]; then
                         echo "Successfully started VMware Harbor..."
